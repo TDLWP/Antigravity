@@ -14,11 +14,11 @@
         margin: 0; background-color: #1a1a1a; display: flex; 
         justify-content: center; align-items: center; 
         min-height: 100vh; font-family: 'Press Start 2P', cursive;
-        overflow: hidden;
+        overflow: hidden; color: #fff;
     }
     #phone-casing {
-        width: 320px; height: 600px;
-        background: linear-gradient(145deg, #444a5b, #22252a);
+        width: 320px; height: 620px;
+        background: linear-gradient(145deg, #4c5264, #2a2e35);
         border-radius: 50px; border: 4px solid #6c7380;
         box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 2px 5px rgba(255,255,255,0.2);
         display: flex; flex-direction: column; align-items: center;
@@ -31,7 +31,7 @@
     }
     #screen-bezel {
         background: #000; padding: 20px 20px 40px 20px;
-        border-radius: 10px; box-shadow: inset 0 0 20px rgba(0,0,0,1);
+        border-radius: 12px; box-shadow: inset 0 0 20px rgba(0,0,0,1);
         position: relative; border: 3px solid #2a2a2a;
     }
     .brand {
@@ -42,6 +42,7 @@
     .lcd-container {
         position: relative;
         overflow: hidden;
+        border-radius: 2px;
     }
     canvas {
         background: #8fa886;
@@ -49,11 +50,10 @@
         width: 176px; height: 220px;
         box-shadow: inset 0px 0px 15px rgba(0,0,0,0.4);
     }
-    /* Scanline effect overlay */
     .scanlines {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
-                    linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+                    linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.02));
         background-size: 100% 2px, 3px 100%;
         pointer-events: none;
         z-index: 10;
@@ -67,10 +67,10 @@
         display: flex; justify-content: space-between; width: 240px;
     }
     .soft-btn {
-        width: 80px; height: 28px; background: #a2aab8;
-        border-radius: 12px 12px 2px 2px; box-shadow: 0 5px #5c6370;
+        width: 85px; height: 30px; background: #a2aab8;
+        border-radius: 15px 15px 5px 5px; box-shadow: 0 5px #5c6370;
         display: flex; justify-content: center; align-items: center;
-        font-size: 10px; cursor: pointer; color: #222;
+        font-size: 9px; cursor: pointer; color: #222; text-shadow: 0 1px 0 rgba(255,255,255,0.3);
     }
     .soft-btn:active, .nav-btn:active {
         box-shadow: 0 1px #5c6370; transform: translateY(4px);
@@ -80,13 +80,13 @@
         grid-template-rows: 45px 45px 45px; gap: 8px;
     }
     .nav-btn {
-        background: #c3c4c9; border-radius: 10px;
+        background: #c3c4c9; border-radius: 12px;
         box-shadow: 0 5px #818388; display: flex; 
         justify-content: center; align-items: center;
         font-size: 16px; cursor: pointer; color: #111;
         user-select: none;
     }
-    .nav-btn.center { border-radius: 50%; background: #d0d0d5; box-shadow: 0 5px #919398; font-size: 12px; }
+    .nav-btn.center { border-radius: 50%; background: #d0d0d5; box-shadow: 0 5px #919398; font-size: 11px; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -98,12 +98,12 @@
             <canvas id="screen" width="176" height="220"></canvas>
             <div class="scanlines"></div>
         </div>
-        <div class="brand">NOKOBAN</div>
+        <div class="brand">NOKOBAN PRO</div>
     </div>
     
     <div id="keypad">
         <div class="soft-keys">
-            <div class="soft-btn" onpointerdown="inp('LSOFT')">OPTION</div>
+            <div class="soft-btn" onpointerdown="inp('LSOFT')">MENU</div>
             <div class="soft-btn" onpointerdown="inp('RSOFT')">UNDO</div>
         </div>
         <div class="nav-cluster">
@@ -117,23 +117,28 @@
 </div>
 
 <script>
-// --- LEVELS EXPERT (15 MICROBAN LEVELS) ---
+// --- EXPERT NIVEAUX (MICROBAN 1-20) ---
 const L = [
-  " ####| # .#| #  ###| #*@  #| #  $ #| #    #| ######", // 1
-  " ######| #    #| # @  #| # $* #| # .* #| #    #| ######", // 2
-  " ####| ###  ####| #  $    #| # # # #$#| # . . #@#| #########", // 3
-  " ########| #      #| # .**$@#| #      #| #####  #| #######", // 4
-  " #######| #     #| # .$. #| # ##  #| # $@$ #| # .$. #| #     #| #######", // 5
-  " ######| #  . #| # $  #| # @  #| ######", // 6
-  " #######| #     #| # .$. #| # ##  #| #  @  #| #######", // 7
-  " ####| ###  ####| #  $    #| # # # #$#| # . . #@#| #########", // 8 (variation)
-  " ########| #  .   #| # @$.  #| #      #| #######", // 9
-  " #######| #  @  #| #  $  #| # ..  #| #  $  #| #######", // 10
-  " #####| #   #| # $ #| #  $#| ##. #| #@ .#| #####", // 11
-  " ####| #  #| #  ###| #   . #| # # $ #| #   @ #| #######", // 12
-  " #####| #   #| # $ #| #$. ###| ##.$  #| # @  #| ######", // 13
-  " ####| #  #| # .###| ## $ #| # $  #| #..@ #| ######", // 14
-  " #######| #  @  #| # .$. #| #  $  #| # . . #| #  $  #| #######" // 15
+  "####|# .#|#  ###|#*@  #|#  $ #|#  ###|####", // 1
+  "######|#    #|# #@ #|# $* #|# .* #|#    #|######", // 2
+  "  ####|###  ####|#     $ #|# #  #$ #|# . .#@ #|#########", // 3
+  "########|#      #|# .**$@#|#      #|#####  #|    ####", // 4
+  " #######| #     #| # .$. #|## $@$ #|#  .$. #|#      #|########", // 5
+  "###### #####|#    ###   #|# $$     #@#|# $ #...   #|#   ########|#####", // 6
+  "#######|#     #|# .$. #|# $.$ #|# .$. #|# $.$ #|#  @  #|#######", // 7
+  "  ######|  # ..@#|  # $$ #|  ## ###|   # #|   # #|#### #|#    ##|# #   #|#   # #|###   #|  #####", // 8
+  "#####|#.  ##|#@$$ #|##   #| ##  #|  ##.#|   ###", // 9
+  "      #####|      #.  #|      #.# #|#######.# #|# @ $ $ $ #|# # # # ###|#       #|#########", // 10
+  "  ######|  #    #|  # ##@##|### # $ #|# ..# $ #|#       #|#  ######|####", // 11
+  "#####|#   ##|# $  #|## $ ####| ###@.  #|  #  .# #|  #     #|  #######", // 12
+  "####|#. ##|#.@ #|#. $#|##$ ###| # $  #| #    #| #  ###| ####", // 13
+  "#######|#     #|# # # #|#. $*@#|#   ###|#####", // 14
+  "     ###|######@##|#    .* #|#   #   #|#####$# #|    #   #|    #####", // 15
+  " ####| #  ####| #     ##|## ##   #|#. .# @$##|#   # $$ #|#  .#    #|##########", // 16
+  "#####|# @ #|#...#|#$$$##|#    #|#    #|######", // 17
+  "#######|#     #|#. .  #|# ## ##|#  $ #|###$ #|  #@ #|  #  #|  ####", // 18
+  "########|#   .. #|#  @$$ #|##### ##|   #  #|   #  #|   #  #|   ####", // 19
+  "#######|#     ###|#  @$$..#|#### ## #|  #     #|  #  ####|  #  #|  ####" // 20
 ];
 
 let A;
@@ -142,17 +147,24 @@ function sfx(t) {
     if(A.state === 'suspended') A.resume();
     let o = A.createOscillator(), g = A.createGain(), n = A.currentTime;
     o.connect(g); g.connect(A.destination);
-    if(t=='mv') { o.type='square'; o.frequency.setTargetAtTime(150, n, 0.05); g.gain.setTargetAtTime(0.02, n, 0.05); o.start(); o.stop(n+0.05); }
-    else if(t=='psh') { o.type='triangle'; o.frequency.setTargetAtTime(100, n, 0.1); g.gain.setTargetAtTime(0.05, n, 0.1); o.start(); o.stop(n+0.1); }
-    else if(t=='err') { o.type='sawtooth'; o.frequency.setValueAtTime(60, n); g.gain.setTargetAtTime(0.05, n, 0.1); o.start(); o.stop(n+0.1); }
-    else if(t=='win') { o.frequency.setValueAtTime(523, n); o.frequency.setValueAtTime(659, n+0.1); o.frequency.setValueAtTime(783, n+0.2); o.frequency.setValueAtTime(1046, n+0.3); g.gain.setTargetAtTime(0.05, n, 0.5); o.start(); o.stop(n+0.5); }
+    if(t=='mv') { o.type='square'; o.frequency.setTargetAtTime(150, n, 0.03); g.gain.setTargetAtTime(0.04, n, 0.03); o.start(); o.stop(n+0.05); }
+    else if(t=='psh') { o.type='triangle'; o.frequency.setTargetAtTime(120, n, 0.08); g.gain.setTargetAtTime(0.06, n, 0.08); o.start(); o.stop(n+0.1); }
+    else if(t=='err') { o.type='sawtooth'; o.frequency.setValueAtTime(70, n); g.gain.setTargetAtTime(0.08, n, 0.1); o.start(); o.stop(n+0.1); }
+    else if(t=='win') { 
+        [523, 659, 783, 1046].forEach((f, i) => { 
+            let oo = A.createOscillator(), gg = A.createGain(); 
+            oo.type='square'; oo.frequency.setValueAtTime(f, n + i*0.1); 
+            gg.gain.setValueAtTime(0.05, n + i*0.1); gg.gain.exponentialRampToValueAtTime(0.001, n + i*0.1 + 0.4); 
+            oo.connect(gg); gg.connect(A.destination); oo.start(n + i*0.1); oo.stop(n + i*0.1 + 0.5);
+        });
+    }
 }
 
 const cvs = document.getElementById("screen"), ctx = cvs.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
 let state = "TITLE", menuSel = 0, lvlSel = 0;
-let unlockedLvls = localStorage.getItem('soko_prof_unlocked') ? parseInt(localStorage.getItem('soko_prof_unlocked')) : 1, curLvl = 0;
+let unlockedLvls = localStorage.getItem('soko_pro_unlocked') ? parseInt(localStorage.getItem('soko_pro_unlocked')) : 1, curLvl = 0;
 let movs = 0, pshs = 0, map = [], hist = [], px = 0, py = 0, tw = 12, offX = 0, offY = 0;
 
 function loadMap(idx) {
@@ -168,7 +180,7 @@ function loadMap(idx) {
 
 function get(x,y) { return (y>=0 && y<map.length && x>=0 && x<map[y].length) ? map[y][x] : ' '; }
 function set(x,y,v) { map[y][x] = v; }
-function saveHist() { hist.push({m: map.map(r=>[...r]), px, py, movs, pshs}); if(hist.length>100) hist.shift(); }
+function saveHist() { hist.push({m: map.map(r=>[...r]), px, py, movs, pshs}); if(hist.length>200) hist.shift(); }
 
 function tryMove(dx, dy) {
     let nx=px+dx, ny=py+dy, t1=get(nx,ny);
@@ -176,11 +188,7 @@ function tryMove(dx, dy) {
     if(t1=='$' || t1=='*') {
         let nnx=nx+dx, nny=ny+dy, t2=get(nnx,nny);
         if(t2=='.' || t2==' ') {
-            saveHist(); set(nx,ny, t1=='*'?'.':' '); set(nnx,nny, t2=='.'?'.':' '); // wait
-            set(nnx,nny, t2=='.'? '*' : '$');
-            set(nx,ny, get(px,py)=='+'? '.' : ' '); // current player spot back to grid
-            set(nx,ny, t2=='.'?' ':' '); // dummy logic redo
-            // Reset and do properly
+            saveHist();
             map[py][px] = (get(px,py)=='+') ? '.' : ' ';
             map[ny][nx] = (t1=='*') ? '+' : '@';
             map[nny][nnx] = (t2=='.') ? '*' : '$';
@@ -195,11 +203,11 @@ function tryMove(dx, dy) {
 }
 
 function checkWin() {
-    let won = true; map.forEach(r => r.forEach(c => { if(c=='$') won=false; }));
-    if(won) { 
+    let boxesLeft = 0; map.forEach(r => r.forEach(c => { if(c=='$') boxesLeft++; }));
+    if(boxesLeft === 0) { 
         sfx('win'); state="WIN"; 
         if(curLvl+1 >= unlockedLvls && unlockedLvls < L.length) { 
-            unlockedLvls++; localStorage.setItem('soko_prof_unlocked', unlockedLvls); 
+            unlockedLvls++; localStorage.setItem('soko_pro_unlocked', unlockedLvls); 
         } 
     }
 }
@@ -224,18 +232,19 @@ function inp(k) {
     }
     else if(state=="PLAY") {
         if(k=='U') tryMove(0,-1); if(k=='D') tryMove(0,1); if(k=='L') tryMove(-1,0); if(k=='R') tryMove(1,0);
-        if(k=='LSOFT') state="PAUSE"; if(k=='RSOFT') undo();
+        if(k=='LSOFT' || k=='ESC') state="PAUSE"; if(k=='RSOFT') undo();
     }
     else if(state=="PAUSE") {
         if(k=='U') menuSel=(menuSel+2)%3; if(k=='D') menuSel=(menuSel+1)%3;
         if(k=='OK'||k=='LSOFT') { if(menuSel==0) state="PLAY"; else if(menuSel==1) loadMap(curLvl); else state="MENU"; }
+        if(k=='RSOFT' || k=='ESC') state="PLAY";
     }
     else if(state=="WIN") { if(k) { if(curLvl+1<L.length) loadMap(curLvl+1); else state="END"; } }
     else if(state=="ABOUT" || state=="END") if(k) state="MENU";
 }
 
 document.addEventListener('keydown', e => {
-    let mk = {"ArrowUp":"U","ArrowDown":"D","ArrowLeft":"L","ArrowRight":"R","w":"U","s":"D","a":"L","d":"R","Enter":"OK","Escape":"LSOFT","u":"RSOFT","r":"RSOFT"," ":"OK"}[e.key];
+    let mk = {"ArrowUp":"U","ArrowDown":"D","ArrowLeft":"L","ArrowRight":"R","w":"U","s":"D","a":"L","d":"R","Enter":"OK","Escape":"ESC","u":"RSOFT","r":"OK"," ":"OK"}[e.key];
     if(mk) { inp(mk); e.preventDefault(); }
 });
 
@@ -244,45 +253,45 @@ function draw() {
     if(state=="TITLE") {
         ctx.fillStyle="#000"; ctx.textAlign="center"; 
         ctx.font="14px 'Press Start 2P'"; ctx.fillText("SOKOBAN", 88, 80);
-        ctx.font="8px 'Press Start 2P'"; ctx.fillText("PROFESSIONAL", 88, 100);
-        ctx.fillText("PRESS OK", 88, 160);
+        ctx.font="9px 'Press Start 2P'"; ctx.fillText("PRO EDITION", 88, 100);
+        ctx.font="7px 'Press Start 2P'"; ctx.fillText("PRESS OK", 88, 160);
     } else if(state=="MENU") {
         ctx.font="8px 'Press Start 2P'"; ctx.textAlign="center";
-        ["PLAY","LEVELS","ABOUT"].forEach((o,i) => {
-            if(i==menuSel) { ctx.fillStyle="#000"; ctx.fillRect(20, 60+i*25-10, 136, 16); ctx.fillStyle="#fff"; }
-            else ctx.fillStyle="#222";
-            ctx.fillText(o, 88, 60+i*25);
+        ["CONTINUER","NIVEAUX","A PROPOS"].forEach((o,i) => {
+            if(i==menuSel) { ctx.fillStyle="#000"; ctx.fillRect(15, 65+i*25-10, 146, 16); ctx.fillStyle="#fff"; }
+            else ctx.fillStyle="#1a1a1a";
+            ctx.fillText(o, 88, 65+i*25);
         });
     } else if(state=="PLAY" || state=="PAUSE" || state=="WIN") {
-        // Grid
         for(let y=0; y<map.length; y++) {
             for(let x=0; x<map[y].length; x++) {
                 let pxX=offX+x*tw, pxY=offY+y*tw, t=map[y][x];
-                if(t=='#') { ctx.fillStyle="#1a1a1a"; ctx.fillRect(pxX,pxY,tw,tw); ctx.strokeStyle="#8fa886"; ctx.strokeRect(pxX+1,pxY+1,tw-2,tw-2); }
+                if(t=='#') { ctx.fillStyle="#101810"; ctx.fillRect(pxX,pxY,tw,tw); ctx.strokeStyle="#8fa886"; ctx.strokeRect(pxX+1,pxY+1,tw-2,tw-2); }
                 else if(t=='.') { ctx.fillStyle="#000"; ctx.fillRect(pxX+tw/2-1,pxY+tw/2-1,2,2); }
                 else if(t=='$') { ctx.lineWidth=1; ctx.strokeStyle="#000"; ctx.strokeRect(pxX+1,pxY+1,tw-2,tw-2); ctx.strokeRect(pxX+3,pxY+3,tw-6,tw-6); }
                 else if(t=='*') { ctx.fillStyle="#000"; ctx.fillRect(pxX+1,pxY+1,tw-2,tw-2); ctx.strokeStyle="#8fa886"; ctx.strokeRect(pxX+3,pxY+3,tw-6,tw-6); }
                 else if(t=='@' || t=='+') { 
                     ctx.fillStyle="#000"; ctx.fillRect(pxX+2,pxY+2,tw-4,tw-4);
                     if(t=='+') { ctx.fillStyle="#8fa886"; ctx.fillRect(pxX+tw/2-1,pxY+tw/2-1,2,2); }
+                    ctx.fillStyle="#8fa886"; ctx.fillRect(pxX+3, pxY+3, 2, 1); // eyes
                 }
             }
         }
         ctx.fillStyle="#000"; ctx.fillRect(0,0,176,16); ctx.fillStyle="#fff"; ctx.font="8px 'Press Start 2P'";
-        ctx.textAlign="left"; ctx.fillText("L"+(curLvl+1), 4, 12);
+        ctx.textAlign="left"; ctx.fillText("LVL "+(curLvl+1), 4, 12);
         ctx.textAlign="right"; ctx.fillText("M"+movs, 172, 12);
         if(state=="PAUSE") { ctx.fillStyle="rgba(0,0,0,0.5)"; ctx.fillRect(0,0,176,220); ctx.fillStyle="#fff"; ctx.textAlign="center"; ctx.fillText("PAUSE", 88, 110); }
-        if(state=="WIN") { ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fillRect(0,80,176,60); ctx.fillStyle="#000"; ctx.textAlign="center"; ctx.fillText("CLEAR!", 88, 115); }
+        if(state=="WIN") { ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fillRect(0,85,176,50); ctx.fillStyle="#000"; ctx.textAlign="center"; ctx.fillText("SUCCÈS !", 88, 115); }
     } else if(state=="LEVEL_SEL") {
-        ctx.textAlign="center"; ctx.font="8px 'Press Start 2P'"; ctx.fillStyle="#000"; ctx.fillText("LEVEL SELECT", 88, 30);
+        ctx.textAlign="center"; ctx.font="8px 'Press Start 2P'"; ctx.fillStyle="#000"; ctx.fillText("SÉLECTION", 88, 30);
         for(let i=0; i<L.length; i++) {
             let cx=25+(i%5)*32, cy=60+Math.floor(i/5)*32;
             if(i==lvlSel) { ctx.fillStyle="#000"; ctx.fillRect(cx-12, cy-12, 24, 24); ctx.fillStyle="#fff"; }
-            else { ctx.strokeStyle="#000"; ctx.strokeRect(cx-12, cy-12, 24, 24); ctx.fillStyle="#222"; }
-            if(i<unlockedLvls) ctx.fillText(i+1, cx, cy+4); else ctx.fillText("X", cx, cy+4);
+            else { ctx.strokeStyle="#000"; ctx.strokeRect(cx-12, cy-12, 24, 24); ctx.fillStyle="#101810"; }
+            if(i<unlockedLvls) ctx.fillText(i+1, cx, cy+4); else ctx.fillRect(cx-4, cy-4, 8, 8);
         }
-    } else if(state=="ABOUT") { ctx.textAlign="center"; ctx.font="8px 'Press Start 2P'"; ctx.fillStyle="#000"; ctx.fillText("NOKOBAN PRO", 88, 60); ctx.fillText("DESIGN: SKYLINE", 88, 90); ctx.fillText("LEVELS: MICROBAN", 88, 110); }
-    else if(state=="END") { ctx.textAlign="center"; ctx.font="10px 'Press Start 2P'"; ctx.fillStyle="#000"; ctx.fillText("GAME BEAT!", 88, 110); }
+    } else if(state=="ABOUT") { ctx.textAlign="center"; ctx.font="8px 'Press Start 2P'"; ctx.fillStyle="#000"; ctx.fillText("NOKOBAN PRO", 88, 60); ctx.fillText("EDITION 2024", 88, 90); ctx.fillText("MICROBAN Puzzles", 88, 110); }
+    else if(state=="END") { ctx.textAlign="center"; ctx.font="10px 'Press Start 2P'"; ctx.fillStyle="#000"; ctx.fillText("BRAVO !", 88, 80); font="8px 'Press Start 2P'"; ctx.fillText("TOUS LES NIVEAUX", 88, 110); ctx.fillText("TERMINÉS", 88, 130); }
     
     requestAnimationFrame(draw);
 }
@@ -290,10 +299,7 @@ draw();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(
-      r => console.log('SW enregistré!'),
-      e => console.log('SW échec:', e)
-    );
+    navigator.serviceWorker.register('./sw.js').then(r => console.log('SW OK'), e => console.log('SW ERR', e));
   });
 }
 </script>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sokoban-retro-v1';
+const CACHE_NAME = 'sokoban-retro-v2';
 const urlsToCache = [
   './',
   './index.html',
