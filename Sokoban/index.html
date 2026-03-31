@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Retro Sokoban Mobile</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#8fa886">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
     * { box-sizing: border-box; touch-action: manipulation; }
@@ -363,6 +366,16 @@ function draw() {
     }
 }
 window.onload = draw;
+
+// --- ENREGISTREMENT SERVICE WORKER (PWA - HORS LIGNE) ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then(
+      r => console.log('Sokoban SW enregistré!'),
+      e => console.log('Sokoban SW échec:', e)
+    );
+  });
+}
 </script>
 </body>
 </html>
